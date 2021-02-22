@@ -1,0 +1,71 @@
+default: &default
+  encoder_cls: "gssl.batched.encoders.BatchedTwoLayerGCN"
+  batch_sizes: [256, 512, 1024, 2048]
+  inference_batch_size: 1024
+  use_pytorch_eval_model: False
+  use_train_mask: False
+  total_epochs: 1000
+  warmup_epochs: 100
+  log_interval: 100
+  num_splits: 20
+
+WikiCS:
+  <<: *default
+  emb_dim: 256
+  lr_base: 5.e-4
+
+Amazon-CS:
+  <<: *default
+  emb_dim: 128
+  lr_base: 5.e-4
+
+Amazon-Photo:
+  <<: *default
+  emb_dim: 256
+  lr_base: 1.e-4
+
+Coauthor-CS:
+  <<: *default
+  num_splits: 5
+  emb_dim: 256
+  lr_base: 1.e-5
+
+Coauthor-Physics:
+  <<: *default
+  num_splits: 5
+  emb_dim: 128
+  lr_base: 1.e-5
+
+ogbn-arxiv:
+  <<: *default
+  encoder_cls: "gssl.batched.encoders.BatchedThreeLayerGCN"
+  batch_sizes: [1024, 2048]
+  use_pytorch_eval_model: True
+  total_epochs: 500
+  num_splits: 5
+  emb_dim: 256
+  lr_base: 1.e-3
+
+PPI:
+  <<: *default
+  encoder_cls: "gssl.batched.encoders.BatchedGAT"
+  batch_sizes: [512, 1024]
+  total_epochs: 500
+  warmup_epochs: 50
+  log_interval: 100
+  num_splits: 5
+  emb_dim: 512
+  lr_base: 5.e-3
+
+ogbn-products:
+  <<: *default
+  encoder_cls: "gssl.batched.encoders.BatchedGAT"
+  batch_sizes: [512,]
+  use_pytorch_eval_model: True
+  use_train_mask: True
+  total_epochs: 100
+  warmup_epochs: 10
+  log_interval: 10
+  num_splits: 5
+  emb_dim: 128
+  lr_base: 1.e-3

@@ -1,7 +1,6 @@
 import sys
 
-from gssl.datasets import load_dataset
-from gssl.inductive.datasets import load_ppi
+from gssl.datasets import load_dataset, load_ppi
 from gssl.utils import seed
 
 

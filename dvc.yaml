@@ -8,16 +8,17 @@ stages:
       - Coauthor-Physics
       - ogbn-arxiv
       - PPI
+      - ogbn-products
     do:
       wdir: .
       cmd: PYTHONPATH=. python3 experiments/scripts/preprocess_dataset.py ${item}
       deps:
         - experiments/scripts/preprocess_dataset.py
       outs:
-        - data/ssl/datasets/${item}/
+        - data/datasets/${item}/
 
-  ### Barlow Twins loss ###
-  hps_transductive_barlow_twins:
+  ### Full batch scenario
+  full_batch_hps:
     foreach:
       - WikiCS
       - Amazon-CS
@@ -25,20 +26,21 @@ stages:
       - Coauthor-CS
       - Coauthor-Physics
       - ogbn-arxiv
+      - PPI
     do:
       wdir: .
-      cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py ${item} barlow_twins
+      cmd: PYTHONPATH=. python3 experiments/scripts/full_batch/hps.py ${item}
       params:
-        - experiments/configs/hyperparameter_search_transductive.yaml:
-            - barlow_twins.${item}
+        - experiments/configs/full_batch/hps.yaml:
+            - ${item}
       deps:
-        - experiments/scripts/hyperparameter_search_transductive.py
-        - gssl/transductive_model.py
-        - data/ssl/datasets/${item}/
+        - experiments/scripts/full_batch/hps.py
+        - data/datasets/${item}/
       outs:
-        - data/ssl/barlow_twins/${item}/hps.csv
+        - data/full_batch/hps/${item}/log.csv
+        - data/full_batch/hps/${item}/best.json
 
-  train_transductive_barlow_twins:
+  full_batch_train:
     foreach:
       - WikiCS
       - Amazon-CS
@@ -46,57 +48,24 @@ stages:
       - Coauthor-CS
       - Coauthor-Physics
       - ogbn-arxiv
+      - PPI
     do:
       wdir: .
-      cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py ${item} barlow_twins
+      cmd: PYTHONPATH=. python3 experiments/scripts/full_batch/train.py ${item}
       params:
-        - experiments/configs/train_transductive.yaml:
-            - barlow_twins.${item}
-      metrics:
-        - data/ssl/barlow_twins/${item}/metrics.json
+        - experiments/configs/full_batch/train.yaml:
+            - ${item}
+        - data/full_batch/hps/${item}/best.json:
+            - SAME
       deps:
-        - experiments/scripts/train_transductive.py
-        - gssl/transductive_model.py
-        - data/ssl/datasets/${item}/
+        - experiments/scripts/full_batch/train.py
+        - gssl/full_batch/model.py
+        - data/datasets/${item}/
       outs:
-        - data/ssl/barlow_twins/${item}/logs/
-        - data/ssl/barlow_twins/${item}/embeddings/
-        - data/ssl/barlow_twins/${item}/models/
-        - data/ssl/barlow_twins/${item}/metadata.json
+        - data/full_batch/train/${item}/
 
-  hps_inductive_barlow_twins:
-    wdir: .
-    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_inductive_ppi.py barlow_twins
-    params:
-      - experiments/configs/hyperparameter_search_inductive_ppi.yaml:
-          - barlow_twins.PPI
-    deps:
-      - experiments/scripts/hyperparameter_search_inductive_ppi.py
-      - gssl/inductive/model.py
-      - data/ssl/datasets/PPI/
-    outs:
-      - data/ssl/barlow_twins/PPI/hps.csv
-
-  train_inductive_ppi_barlow_twins:
-    wdir: .
-    cmd: PYTHONPATH=. python3 experiments/scripts/train_inductive_ppi.py barlow_twins
-    params:
-      - experiments/configs/train_inductive_ppi.yaml:
-          - barlow_twins.PPI
-    metrics:
-      - data/ssl/barlow_twins/PPI/metrics.json
-    deps:
-      - experiments/scripts/train_inductive_ppi.py
-      - gssl/inductive/model.py
-      - data/ssl/datasets/PPI/
-    outs:
-      - data/ssl/barlow_twins/PPI/logs/
-      - data/ssl/barlow_twins/PPI/embeddings/
-      - data/ssl/barlow_twins/PPI/models/
-      - data/ssl/barlow_twins/PPI/metadata.json
-
-  ### Hilbert-Schmidt Independence Criterion ###
-  hps_transductive_hsic:
+  ### Batched scenario
+  batched_train:
     foreach:
       - WikiCS
       - Amazon-CS
@@ -104,72 +73,137 @@ stages:
       - Coauthor-CS
       - Coauthor-Physics
       - ogbn-arxiv
+      - PPI
     do:
       wdir: .
-      cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py ${item} hsic
+      cmd: PYTHONPATH=. python3 experiments/scripts/batched/train.py ${item}
       params:
-        - experiments/configs/hyperparameter_search_transductive.yaml:
-            - hsic.${item}
+        - experiments/configs/batched/train.yaml:
+            - ${item}
+        - data/full_batch/hps/${item}/best.json:
+            - SAME
       deps:
-        - experiments/scripts/hyperparameter_search_transductive.py
-        - gssl/transductive_model.py
-        - data/ssl/datasets/${item}/
+        - experiments/scripts/batched/train.py
+        - data/datasets/${item}/
       outs:
-        - data/ssl/hsic/${item}/hps.csv
+        - data/batched/train/${item}/
 
-  train_transductive_hsic:
+  ### OGBn-Products
+  batched_hps_ogbn_products:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/batched/hps.py ogbn-products
+    params:
+      - experiments/configs/batched/hps.yaml:
+          - ogbn-products
+    deps:
+      - experiments/scripts/batched/hps.py
+      - data/datasets/ogbn-products/
+    outs:
+      - data/batched/hps/ogbn-products/log.csv
+      - data/batched/hps/ogbn-products/best.json
+
+  batched_train_ogbn_products:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/batched/train.py ogbn-products
+    params:
+      - experiments/configs/batched/train.yaml:
+          - ogbn-products
+      - data/batched/hps/ogbn-products/best.json:
+          - SAME
+    deps:
+      - experiments/scripts/batched/train.py
+      - data/datasets/ogbn-products/
+    outs:
+      - data/batched/train/ogbn-products/
+
+  ### Additional experiments
+  compare_augmentation_hyperparameter_sets:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/compare_augmentation_hyperparameter_sets.py
+    deps:
+      - experiments/scripts/compare_augmentation_hyperparameter_sets.py
+      - data/full_batch/hps/
+    outs:
+      - data/augmentation_hyperparameter_plot.png
+
+  compare_running_times:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/time/compare_running_times.py
+    deps:
+      - experiments/scripts/time/compare_running_times.py
+    outs:
+      - data/time/log.csv
+      - data/time/summary_table.txt
+
+  train_bgrl_full_batch:
     foreach:
       - WikiCS
       - Amazon-CS
       - Amazon-Photo
       - Coauthor-CS
-      - Coauthor-Physics
-      - ogbn-arxiv
+      # - Coauthor-Physics  # OOM
+      # - ogbn-arxiv
+      # - PPI
     do:
       wdir: .
-      cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py ${item} hsic
+      cmd: PYTHONPATH=. python3 experiments/scripts/full_batch/train_bgrl.py ${item}
       params:
-        - experiments/configs/train_transductive.yaml:
-            - hsic.${item}
-      metrics:
-        - data/ssl/hsic/${item}/metrics.json
+        - experiments/configs/full_batch/train_bgrl.yaml:
+            - ${item}
       deps:
-        - experiments/scripts/train_transductive.py
-        - gssl/transductive_model.py
-        - data/ssl/datasets/${item}/
+        - experiments/scripts/full_batch/train_bgrl.py
+        - data/datasets/${item}/
       outs:
-        - data/ssl/hsic/${item}/logs/
-        - data/ssl/hsic/${item}/embeddings/
-        - data/ssl/hsic/${item}/models/
-        - data/ssl/hsic/${item}/metadata.json
+        - data/full_batch/train_bgrl/${item}/
 
-  hps_inductive_hsic:
-    wdir: .
-    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_inductive_ppi.py hsic
-    params:
-      - experiments/configs/hyperparameter_search_inductive_ppi.yaml:
-          - hsic.PPI
-    deps:
-      - experiments/scripts/hyperparameter_search_inductive_ppi.py
-      - gssl/inductive/model.py
-      - data/ssl/datasets/PPI/
-    outs:
-      - data/ssl/hsic/PPI/hps.csv
+  bgrl_hps_batched:
+    foreach:
+      - ogbn-products
+    do:
+      wdir: .
+      cmd: PYTHONPATH=. python3 experiments/scripts/batched/hps_bgrl.py ${item}
+      params:
+        - experiments/configs/batched/hps_bgrl.yaml:
+            - ${item}
+      deps:
+        - experiments/scripts/batched/hps_bgrl.py
+        - data/datasets/${item}/
+      outs:
+        - data/batched/hps_bgrl/${item}/log.csv
+        - data/batched/hps_bgrl/${item}/best.json
 
-  train_inductive_ppi_hsic:
+  bgrl_batched_train:
+    foreach:
+      - ogbn-products
+    do:
+      wdir: .
+      cmd: PYTHONPATH=. python3 experiments/scripts/batched/train_bgrl.py ${item}
+      params:
+        - experiments/configs/batched/train_bgrl.yaml:
+            - ${item}
+        - data/batched/hps_bgrl/${item}/best.json:
+            - SAME
+      deps:
+        - experiments/scripts/batched/train_bgrl.py
+        - data/datasets/${item}/
+      outs:
+        - data/batched/train_bgrl/${item}/
+
+  evaluate_features_products:
     wdir: .
-    cmd: PYTHONPATH=. python3 experiments/scripts/train_inductive_ppi.py hsic
-    params:
-      - experiments/configs/train_inductive_ppi.yaml:
-          - hsic.PPI
-    metrics:
-      - data/ssl/hsic/PPI/metrics.json
+    cmd: PYTHONPATH=. python3 experiments/scripts/products/features.py
     deps:
-      - experiments/scripts/train_inductive_ppi.py
-      - gssl/inductive/model.py
-      - data/ssl/datasets/PPI/
+      - experiments/scripts/products/features.py
+      - data/datasets/ogbn-products/
     outs:
-      - data/ssl/hsic/PPI/logs/
-      - data/ssl/hsic/PPI/embeddings/
-      - data/ssl/hsic/PPI/models/
-      - data/ssl/hsic/PPI/metadata.json
+      - data/products/features.json
+
+  evaluate_deepwalk_products:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/products/deepwalk.py
+    deps:
+      - experiments/scripts/products/deepwalk.py
+      - data/datasets/ogbn-products/
+    outs:
+      - data/products/deepwalk.json
+      - data/products/deepwalk_features.json

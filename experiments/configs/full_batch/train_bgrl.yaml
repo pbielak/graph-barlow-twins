@@ -1,0 +1,77 @@
+default: &default
+  total_epochs: 10000
+  warmup_epochs: 1000
+  log_interval: 1000
+  use_pytorch_eval_model: False
+
+WikiCS:
+  <<: *default
+  p_f_1: 0.2
+  p_f_2: 0.1
+  p_e_1: 0.2
+  p_e_2: 0.3
+  lr_base: 5.e-4
+  emb_dim: 256
+  hidden_dim: 512
+  pred_dim: 512
+
+Amazon-CS:
+  <<: *default
+  p_f_1: 0.2
+  p_f_2: 0.1
+  p_e_1: 0.5
+  p_e_2: 0.4
+  lr_base: 5.e-4
+  emb_dim: 128
+  hidden_dim: 256
+  pred_dim: 512
+
+Amazon-Photo:
+  <<: *default
+  p_f_1: 0.1
+  p_f_2: 0.2
+  p_e_1: 0.4
+  p_e_2: 0.1
+  lr_base: 1.e-4
+  emb_dim: 256
+  hidden_dim: 512
+  pred_dim: 512
+
+Coauthor-CS:
+  <<: *default
+  p_f_1: 0.3
+  p_f_2: 0.4
+  p_e_1: 0.3
+  p_e_2: 0.2
+  lr_base: 1.e-5
+  emb_dim: 256
+  hidden_dim: 512
+  pred_dim: 512
+
+Coauthor-Physics:
+  <<: *default
+  p_f_1: 0.1
+  p_f_2: 0.4
+  p_e_1: 0.4
+  p_e_2: 0.1
+  lr_base: 1.e-5
+  emb_dim: 128
+  hidden_dim: 256
+  pred_dim: 512
+
+#ogbn-arxiv:
+#  total_epochs: 500
+#  warmup_epochs: 100
+#  log_interval: 100
+#  encoder_cls: "gssl.full_batch.encoders.ThreeLayerGCNEncoder"
+#  use_pytorch_eval_model: True
+#  emb_dim: 256
+#  lr_base: 1.e-3
+#
+#PPI:
+#  total_epochs: 500
+#  warmup_epochs: 50
+#  log_interval: 100
+#  encoder_cls: "gssl.full_batch.encoders.GATEncoder"
+#  emb_dim: 512
+#  lr_base: 5.e-3

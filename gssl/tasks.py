@@ -12,7 +12,7 @@ from torch_geometric.data import Data
 from tqdm import tqdm
 
 
-def evaluate_node_classification(
+def evaluate_node_classification_acc(
     z: torch.Tensor,
     data: Data,
     masks: Dict[str, torch.Tensor],
@@ -102,6 +102,7 @@ def train_pytorch_model(
             in_dim=emb_dim,
             out_dim=num_cls,
             weight_decay=weight_decay,
+            is_multilabel=False,
         )
 
         lr_model.fit(X[masks["train"]], y[masks["train"]])
@@ -124,9 +125,89 @@ def train_pytorch_model(
     return best_clf
 
 
+def evaluate_node_classification_multilabel_f1(
+    z_train: torch.Tensor,
+    y_train: torch.Tensor,
+    z_val: torch.Tensor,
+    y_val: torch.Tensor,
+    z_test: torch.Tensor,
+    y_test: torch.Tensor,
+) -> Dict[str, float]:
+    # Normalize input
+    z_train = sk_prep.StandardScaler().fit_transform(X=z_train)
+    z_val = sk_prep.StandardScaler().fit_transform(X=z_val)
+    z_test = sk_prep.StandardScaler().fit_transform(X=z_test)
+
+    # Shapes
+    emb_dim = z_train.shape[1]
+    num_cls = y_train.size(1)
+
+    # Find best classifier for given `weight_decay` space
+    weight_decays = 2.0 ** np.arange(-10, 10, 2)
+
+    best_clf = None
+    best_f1 = -1
+
+    pbar = tqdm(weight_decays, desc="Train best classifier")
+    for wd in pbar:
+        lr_model = LogisticRegression(
+            in_dim=emb_dim,
+            out_dim=num_cls,
+            weight_decay=wd,
+            is_multilabel=True,
+        )
+
+        lr_model.fit(z_train, y_train.numpy())
+
+        f1 = sk_mtr.f1_score(
+            y_true=y_val,
+            y_pred=lr_model.predict(z_val),
+            average="micro",
+            zero_division=0,
+        )
+
+        if f1 > best_f1:
+            best_f1 = f1
+            best_clf = lr_model
+
+            pbar.set_description(f"Best F1: {best_f1 * 100.0:.2f}")
+
+    pbar.close()
+
+    # Compute metrics over all splits
+    all_f1 = {
+        "train": sk_mtr.f1_score(
+            y_true=y_train,
+            y_pred=best_clf.predict(z_train),
+            average="micro",
+            zero_division=0,
+        ),
+        "val": sk_mtr.f1_score(
+            y_true=y_val,
+            y_pred=best_clf.predict(z_val),
+            average="micro",
+            zero_division=0,
+        ),
+        "test": sk_mtr.f1_score(
+            y_true=y_test,
+            y_pred=best_clf.predict(z_test),
+            average="micro",
+            zero_division=0,
+        ),
+    }
+
+    return all_f1
+
+
 class LogisticRegression(nn.Module):
 
-    def __init__(self, in_dim: int, out_dim: int, weight_decay: float):
+    def __init__(
+        self,
+        in_dim: int,
+        out_dim: int,
+        weight_decay: float,
+        is_multilabel: bool,
+    ):
         super().__init__()
 
         self.fc = nn.Linear(in_dim, out_dim)
@@ -136,7 +217,15 @@ class LogisticRegression(nn.Module):
             lr=0.01,
             weight_decay=weight_decay,
         )
-        self._loss_fn = nn.CrossEntropyLoss()
+
+        self._is_multilabel = is_multilabel
+
+        self._loss_fn = (
+            nn.BCEWithLogitsLoss()
+            if self._is_multilabel
+            else nn.CrossEntropyLoss()
+        )
+
         self._num_epochs = 1000
         self._device = torch.device(
             "cuda" if torch.cuda.is_available() else "cpu"
@@ -177,4 +266,7 @@ class LogisticRegression(nn.Module):
         with torch.no_grad():
             pred = self(torch.from_numpy(X).float().to(self._device))
 
-        return pred.argmax(dim=1).cpu()
+        if self._is_multilabel:
+            return (pred > 0).float().cpu()
+        else:
+            return pred.argmax(dim=1).cpu()
