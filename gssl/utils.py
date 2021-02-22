@@ -1,3 +1,4 @@
+import importlib
 import random
 
 import matplotlib.pyplot as plt
@@ -29,3 +30,9 @@ def plot_vectors(latent: torch.Tensor, labels: torch.Tensor):
     fig.legend()
 
     return fig
+
+
+def load_cls_from_str(path):
+    module, model = path.rsplit('.', maxsplit=1)
+    return getattr(importlib.import_module(module), model)
+

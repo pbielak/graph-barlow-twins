@@ -1,0 +1,17 @@
+default: &default
+  encoder_cls: "src.bgrl.BatchedGAT4BGRL"
+  batch_sizes: [512,]
+  inference_batch_size: 1024
+  use_pytorch_eval_model: True
+  use_train_mask: True
+  total_epochs: 100
+  warmup_epochs: 10
+  log_interval: 10
+  num_splits: 5
+
+ogbn-products:
+  <<: *default
+  emb_dim: 128
+  hidden_dim: 256
+  pred_dim: 512
+  lr_base: 1.e-3
