@@ -1,0 +1,101 @@
+barlow_twins:
+  default: &default_bt
+    total_epochs: 4000
+    warmup_epochs: 400
+    log_interval: 1000
+
+  WikiCS:
+    <<: *default_bt
+    emb_dim: 256
+    lr_base: 5.e-4
+    p_x: 0.1
+    p_e: 0.5
+
+  Amazon-CS:
+    <<: *default_bt
+    emb_dim: 128
+    lr_base: 5.e-4
+    p_x: 0.1
+    p_e: 0.4
+
+  Amazon-Photo:
+    <<: *default_bt
+    emb_dim: 256
+    lr_base: 1.e-4
+    p_x: 0.3
+    p_e: 0.1
+
+  Coauthor-CS:
+    <<: *default_bt
+    emb_dim: 256
+    lr_base: 1.e-5
+    p_x: 0.2
+    p_e: 0.5
+
+  Coauthor-Physics:
+    <<: *default_bt
+    emb_dim: 128
+    lr_base: 1.e-5
+    p_x: 0.2
+    p_e: 0.5
+
+  ogbn-arxiv:
+    <<: *default_bt
+    total_epochs: 700
+    warmup_epochs: 100
+    log_interval: 100
+    emb_dim: 256
+    lr_base: 1.e-3
+    p_x: 0.0
+    p_e: 0.4
+
+hsic:
+  default: &default_hsic
+    total_epochs: 4000
+    warmup_epochs: 400
+    log_interval: 1000
+
+  WikiCS:
+    <<: *default_hsic
+    emb_dim: 256
+    lr_base: 5.e-4
+    p_x: 0.1
+    p_e: 0.2
+
+  Amazon-CS:
+    <<: *default_hsic
+    emb_dim: 128
+    lr_base: 5.e-4
+    p_x: 0.1
+    p_e: 0.4
+
+  Amazon-Photo:
+    <<: *default_hsic
+    emb_dim: 256
+    lr_base: 1.e-4
+    p_x: 0.3
+    p_e: 0.4
+
+  Coauthor-CS:
+    <<: *default_hsic
+    emb_dim: 256
+    lr_base: 1.e-5
+    p_x: 0.1
+    p_e: 0.4
+
+  Coauthor-Physics:
+    <<: *default_hsic
+    emb_dim: 128
+    lr_base: 1.e-5
+    p_x: 0.2
+    p_e: 0.5
+
+  ogbn-arxiv:
+    <<: *default_hsic
+    total_epochs: 700
+    warmup_epochs: 100
+    log_interval: 100
+    emb_dim: 256
+    lr_base: 1.e-3
+    p_x: 0.0
+    p_e: 0.3

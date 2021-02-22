@@ -1,0 +1,175 @@
+stages:
+  preprocess_dataset:
+    foreach:
+      - WikiCS
+      - Amazon-CS
+      - Amazon-Photo
+      - Coauthor-CS
+      - Coauthor-Physics
+      - ogbn-arxiv
+      - PPI
+    do:
+      wdir: .
+      cmd: PYTHONPATH=. python3 experiments/scripts/preprocess_dataset.py ${item}
+      deps:
+        - experiments/scripts/preprocess_dataset.py
+      outs:
+        - data/ssl/datasets/${item}/
+
+  ### Barlow Twins loss ###
+  hps_transductive_barlow_twins:
+    foreach:
+      - WikiCS
+      - Amazon-CS
+      - Amazon-Photo
+      - Coauthor-CS
+      - Coauthor-Physics
+      - ogbn-arxiv
+    do:
+      wdir: .
+      cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py ${item} barlow_twins
+      params:
+        - experiments/configs/hyperparameter_search_transductive.yaml:
+            - barlow_twins.${item}
+      deps:
+        - experiments/scripts/hyperparameter_search_transductive.py
+        - gssl/transductive_model.py
+        - data/ssl/datasets/${item}/
+      outs:
+        - data/ssl/barlow_twins/${item}/hps.csv
+
+  train_transductive_barlow_twins:
+    foreach:
+      - WikiCS
+      - Amazon-CS
+      - Amazon-Photo
+      - Coauthor-CS
+      - Coauthor-Physics
+      - ogbn-arxiv
+    do:
+      wdir: .
+      cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py ${item} barlow_twins
+      params:
+        - experiments/configs/train_transductive.yaml:
+            - barlow_twins.${item}
+      metrics:
+        - data/ssl/barlow_twins/${item}/metrics.json
+      deps:
+        - experiments/scripts/train_transductive.py
+        - gssl/transductive_model.py
+        - data/ssl/datasets/${item}/
+      outs:
+        - data/ssl/barlow_twins/${item}/logs/
+        - data/ssl/barlow_twins/${item}/embeddings/
+        - data/ssl/barlow_twins/${item}/models/
+        - data/ssl/barlow_twins/${item}/metadata.json
+
+  hps_inductive_barlow_twins:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_inductive_ppi.py barlow_twins
+    params:
+      - experiments/configs/hyperparameter_search_inductive_ppi.yaml:
+          - barlow_twins.PPI
+    deps:
+      - experiments/scripts/hyperparameter_search_inductive_ppi.py
+      - gssl/inductive/model.py
+      - data/ssl/datasets/PPI/
+    outs:
+      - data/ssl/barlow_twins/PPI/hps.csv
+
+  train_inductive_ppi_barlow_twins:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_inductive_ppi.py barlow_twins
+    params:
+      - experiments/configs/train_inductive_ppi.yaml:
+          - barlow_twins.PPI
+    metrics:
+      - data/ssl/barlow_twins/PPI/metrics.json
+    deps:
+      - experiments/scripts/train_inductive_ppi.py
+      - gssl/inductive/model.py
+      - data/ssl/datasets/PPI/
+    outs:
+      - data/ssl/barlow_twins/PPI/logs/
+      - data/ssl/barlow_twins/PPI/embeddings/
+      - data/ssl/barlow_twins/PPI/models/
+      - data/ssl/barlow_twins/PPI/metadata.json
+
+  ### Hilbert-Schmidt Independence Criterion ###
+  hps_transductive_hsic:
+    foreach:
+      - WikiCS
+      - Amazon-CS
+      - Amazon-Photo
+      - Coauthor-CS
+      - Coauthor-Physics
+      - ogbn-arxiv
+    do:
+      wdir: .
+      cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py ${item} hsic
+      params:
+        - experiments/configs/hyperparameter_search_transductive.yaml:
+            - hsic.${item}
+      deps:
+        - experiments/scripts/hyperparameter_search_transductive.py
+        - gssl/transductive_model.py
+        - data/ssl/datasets/${item}/
+      outs:
+        - data/ssl/hsic/${item}/hps.csv
+
+  train_transductive_hsic:
+    foreach:
+      - WikiCS
+      - Amazon-CS
+      - Amazon-Photo
+      - Coauthor-CS
+      - Coauthor-Physics
+      - ogbn-arxiv
+    do:
+      wdir: .
+      cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py ${item} hsic
+      params:
+        - experiments/configs/train_transductive.yaml:
+            - hsic.${item}
+      metrics:
+        - data/ssl/hsic/${item}/metrics.json
+      deps:
+        - experiments/scripts/train_transductive.py
+        - gssl/transductive_model.py
+        - data/ssl/datasets/${item}/
+      outs:
+        - data/ssl/hsic/${item}/logs/
+        - data/ssl/hsic/${item}/embeddings/
+        - data/ssl/hsic/${item}/models/
+        - data/ssl/hsic/${item}/metadata.json
+
+  hps_inductive_hsic:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_inductive_ppi.py hsic
+    params:
+      - experiments/configs/hyperparameter_search_inductive_ppi.yaml:
+          - hsic.PPI
+    deps:
+      - experiments/scripts/hyperparameter_search_inductive_ppi.py
+      - gssl/inductive/model.py
+      - data/ssl/datasets/PPI/
+    outs:
+      - data/ssl/hsic/PPI/hps.csv
+
+  train_inductive_ppi_hsic:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_inductive_ppi.py hsic
+    params:
+      - experiments/configs/train_inductive_ppi.yaml:
+          - hsic.PPI
+    metrics:
+      - data/ssl/hsic/PPI/metrics.json
+    deps:
+      - experiments/scripts/train_inductive_ppi.py
+      - gssl/inductive/model.py
+      - data/ssl/datasets/PPI/
+    outs:
+      - data/ssl/hsic/PPI/logs/
+      - data/ssl/hsic/PPI/embeddings/
+      - data/ssl/hsic/PPI/models/
+      - data/ssl/hsic/PPI/metadata.json

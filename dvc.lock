@@ -1,0 +1,1145 @@
+schema: '2.0'
+stages:
+  preprocess_dataset@WikiCS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/preprocess_dataset.py WikiCS
+    deps:
+    - path: experiments/scripts/preprocess_dataset.py
+      md5: 0f948fa33378aff5ee196cc468b320b8
+      size: 364
+    outs:
+    - path: data/ssl/datasets/WikiCS/
+      md5: 7ef0d1cda1998b72b9ac4338ca7e3c72.dir
+      size: 102141146
+      nfiles: 4
+  preprocess_dataset@Amazon-CS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/preprocess_dataset.py Amazon-CS
+    deps:
+    - path: experiments/scripts/preprocess_dataset.py
+      md5: 0f948fa33378aff5ee196cc468b320b8
+      size: 364
+    outs:
+    - path: data/ssl/datasets/Amazon-CS/
+      md5: 7f0937cd73da9482ebce6a4f3f70ea5e.dir
+      size: 82919945
+      nfiles: 4
+  preprocess_dataset@Amazon-Photo:
+    cmd: PYTHONPATH=. python3 experiments/scripts/preprocess_dataset.py Amazon-Photo
+    deps:
+    - path: experiments/scripts/preprocess_dataset.py
+      md5: 0f948fa33378aff5ee196cc468b320b8
+      size: 364
+    outs:
+    - path: data/ssl/datasets/Amazon-Photo/
+      md5: 5f52218ff80611104bb313bd310f4d0d.dir
+      size: 44246369
+      nfiles: 4
+  preprocess_dataset@Coauthor-CS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/preprocess_dataset.py Coauthor-CS
+    deps:
+    - path: experiments/scripts/preprocess_dataset.py
+      md5: 0f948fa33378aff5ee196cc468b320b8
+      size: 364
+    outs:
+    - path: data/ssl/datasets/Coauthor-CS/
+      md5: de381c7fb631620ea4d2247c513d5754.dir
+      size: 515731875
+      nfiles: 4
+  preprocess_dataset@Coauthor-Physics:
+    cmd: PYTHONPATH=. python3 experiments/scripts/preprocess_dataset.py Coauthor-Physics
+    deps:
+    - path: experiments/scripts/preprocess_dataset.py
+      md5: 0f948fa33378aff5ee196cc468b320b8
+      size: 364
+    outs:
+    - path: data/ssl/datasets/Coauthor-Physics/
+      md5: 3095b587964b691f75571c1088ab375d.dir
+      size: 1187693422
+      nfiles: 4
+  hps_transductive_barlow_twins@WikiCS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py
+      WikiCS barlow_twins
+    deps:
+    - path: data/ssl/datasets/WikiCS/
+      md5: 7ef0d1cda1998b72b9ac4338ca7e3c72.dir
+      size: 102141146
+      nfiles: 4
+    - path: experiments/scripts/hyperparameter_search_transductive.py
+      md5: 581efdc3638f8eef7c8ef9214b8b4dd7
+      size: 2299
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/hyperparameter_search_transductive.yaml:
+        barlow_twins.WikiCS:
+          total_epochs: 500
+          warmup_epochs: 50
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 256
+          lr_base: 0.0005
+    outs:
+    - path: data/ssl/barlow_twins/WikiCS/hps.csv
+      md5: 61216641d4d5ea8e8ddd63f778bbf768
+      size: 3603
+  hps_transductive_barlow_twins@Amazon-CS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py
+      Amazon-CS barlow_twins
+    deps:
+    - path: data/ssl/datasets/Amazon-CS/
+      md5: 7f0937cd73da9482ebce6a4f3f70ea5e.dir
+      size: 82919945
+      nfiles: 4
+    - path: experiments/scripts/hyperparameter_search_transductive.py
+      md5: 581efdc3638f8eef7c8ef9214b8b4dd7
+      size: 2299
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/hyperparameter_search_transductive.yaml:
+        barlow_twins.Amazon-CS:
+          total_epochs: 500
+          warmup_epochs: 50
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 128
+          lr_base: 0.0005
+    outs:
+    - path: data/ssl/barlow_twins/Amazon-CS/hps.csv
+      md5: 465ae6077802ee5738f92e79202ec09a
+      size: 3491
+  hps_transductive_barlow_twins@Amazon-Photo:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py
+      Amazon-Photo barlow_twins
+    deps:
+    - path: data/ssl/datasets/Amazon-Photo/
+      md5: 5f52218ff80611104bb313bd310f4d0d.dir
+      size: 44246369
+      nfiles: 4
+    - path: experiments/scripts/hyperparameter_search_transductive.py
+      md5: 581efdc3638f8eef7c8ef9214b8b4dd7
+      size: 2299
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/hyperparameter_search_transductive.yaml:
+        barlow_twins.Amazon-Photo:
+          total_epochs: 500
+          warmup_epochs: 50
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 256
+          lr_base: 0.0001
+    outs:
+    - path: data/ssl/barlow_twins/Amazon-Photo/hps.csv
+      md5: 5cd06ad9c89c2b5b531b69c9988de04e
+      size: 3601
+  hps_transductive_barlow_twins@Coauthor-CS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py
+      Coauthor-CS barlow_twins
+    deps:
+    - path: data/ssl/datasets/Coauthor-CS/
+      md5: de381c7fb631620ea4d2247c513d5754.dir
+      size: 515731875
+      nfiles: 4
+    - path: experiments/scripts/hyperparameter_search_transductive.py
+      md5: 581efdc3638f8eef7c8ef9214b8b4dd7
+      size: 2299
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/hyperparameter_search_transductive.yaml:
+        barlow_twins.Coauthor-CS:
+          total_epochs: 500
+          warmup_epochs: 50
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 256
+          lr_base: 1e-05
+    outs:
+    - path: data/ssl/barlow_twins/Coauthor-CS/hps.csv
+      md5: ae4f1f7bbd0f728031ecb09acdf01455
+      size: 3619
+  hps_transductive_barlow_twins@Coauthor-Physics:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py
+      Coauthor-Physics barlow_twins
+    deps:
+    - path: data/ssl/datasets/Coauthor-Physics/
+      md5: 3095b587964b691f75571c1088ab375d.dir
+      size: 1187693422
+      nfiles: 4
+    - path: experiments/scripts/hyperparameter_search_transductive.py
+      md5: 581efdc3638f8eef7c8ef9214b8b4dd7
+      size: 2299
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/hyperparameter_search_transductive.yaml:
+        barlow_twins.Coauthor-Physics:
+          total_epochs: 500
+          warmup_epochs: 50
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 128
+          lr_base: 1e-05
+    outs:
+    - path: data/ssl/barlow_twins/Coauthor-Physics/hps.csv
+      md5: da585d3c8de091921d9cbeb91cf8ed29
+      size: 3605
+  train_transductive_barlow_twins@WikiCS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py WikiCS barlow_twins
+    deps:
+    - path: data/ssl/datasets/WikiCS/
+      md5: 7ef0d1cda1998b72b9ac4338ca7e3c72.dir
+      size: 102141146
+      nfiles: 4
+    - path: experiments/scripts/train_transductive.py
+      md5: 8024ec5013caa94278861772c40c7038
+      size: 3599
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/train_transductive.yaml:
+        barlow_twins.WikiCS:
+          total_epochs: 4000
+          warmup_epochs: 400
+          log_interval: 1000
+          emb_dim: 256
+          lr_base: 0.0005
+          p_x: 0.1
+          p_e: 0.5
+    outs:
+    - path: data/ssl/barlow_twins/WikiCS/embeddings/
+      md5: 6b2f0ebb76dcedd85300709d08b196fd.dir
+      size: 1198258400
+      nfiles: 100
+    - path: data/ssl/barlow_twins/WikiCS/logs/
+      md5: 47cef133b1efcbace146ea31f0ba9fbb.dir
+      size: 27281657
+      nfiles: 20
+    - path: data/ssl/barlow_twins/WikiCS/metadata.json
+      md5: 3e1985074761d4ec6b79b07e3cf92514
+      size: 10886
+    - path: data/ssl/barlow_twins/WikiCS/metrics.json
+      md5: ad4fd01c38eafee7959ad865ff7a41b7
+      size: 876
+    - path: data/ssl/barlow_twins/WikiCS/models/
+      md5: f510c07c41d3fdbb1ea1a9b8bb5101e8.dir
+      size: 69067660
+      nfiles: 20
+  train_transductive_barlow_twins@Amazon-CS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py Amazon-CS
+      barlow_twins
+    deps:
+    - path: data/ssl/datasets/Amazon-CS/
+      md5: 7f0937cd73da9482ebce6a4f3f70ea5e.dir
+      size: 82919945
+      nfiles: 4
+    - path: experiments/scripts/train_transductive.py
+      md5: 8024ec5013caa94278861772c40c7038
+      size: 3599
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/train_transductive.yaml:
+        barlow_twins.Amazon-CS:
+          total_epochs: 4000
+          warmup_epochs: 400
+          log_interval: 1000
+          emb_dim: 128
+          lr_base: 0.0005
+          p_x: 0.1
+          p_e: 0.4
+    outs:
+    - path: data/ssl/barlow_twins/Amazon-CS/embeddings/
+      md5: e68810121f388fe7184bf731a097a484.dir
+      size: 704178400
+      nfiles: 100
+    - path: data/ssl/barlow_twins/Amazon-CS/logs/
+      md5: 14cdabbe4634417cef04f8ffc64bcb85.dir
+      size: 19212466
+      nfiles: 20
+    - path: data/ssl/barlow_twins/Amazon-CS/metadata.json
+      md5: ae6760f093ea833d7d1e541296249e6a
+      size: 10748
+    - path: data/ssl/barlow_twins/Amazon-CS/metrics.json
+      md5: 980c7b7aadcb5b6c9a2e4415a2cb61f4
+      size: 879
+    - path: data/ssl/barlow_twins/Amazon-CS/models/
+      md5: e6e1ae9e6fd6df3a3e06890713d807fa.dir
+      size: 55477900
+      nfiles: 20
+  train_transductive_barlow_twins@Amazon-Photo:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py Amazon-Photo
+      barlow_twins
+    deps:
+    - path: data/ssl/datasets/Amazon-Photo/
+      md5: 5f52218ff80611104bb313bd310f4d0d.dir
+      size: 44246369
+      nfiles: 4
+    - path: experiments/scripts/train_transductive.py
+      md5: 8024ec5013caa94278861772c40c7038
+      size: 3599
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/train_transductive.yaml:
+        barlow_twins.Amazon-Photo:
+          total_epochs: 4000
+          warmup_epochs: 400
+          log_interval: 1000
+          emb_dim: 256
+          lr_base: 0.0001
+          p_x: 0.3
+          p_e: 0.1
+    outs:
+    - path: data/ssl/barlow_twins/Amazon-Photo/embeddings/
+      md5: e7ea26032ff7f3d7baf1dbc1bb91264f.dir
+      size: 783436000
+      nfiles: 100
+    - path: data/ssl/barlow_twins/Amazon-Photo/logs/
+      md5: bbd342facfe5fdfc27aa0827dea60ccf.dir
+      size: 23054343
+      nfiles: 20
+    - path: data/ssl/barlow_twins/Amazon-Photo/metadata.json
+      md5: dfa122153672858249c1305247f8c49f
+      size: 10922
+    - path: data/ssl/barlow_twins/Amazon-Photo/metrics.json
+      md5: 306608a17abf3eee162ec1324ec82545
+      size: 883
+    - path: data/ssl/barlow_twins/Amazon-Photo/models/
+      md5: fcc1ee604ca95555926a5ceda37fc387.dir
+      size: 123749260
+      nfiles: 20
+  train_transductive_barlow_twins@Coauthor-CS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py Coauthor-CS
+      barlow_twins
+    deps:
+    - path: data/ssl/datasets/Coauthor-CS/
+      md5: de381c7fb631620ea4d2247c513d5754.dir
+      size: 515731875
+      nfiles: 4
+    - path: experiments/scripts/train_transductive.py
+      md5: 8024ec5013caa94278861772c40c7038
+      size: 3599
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/train_transductive.yaml:
+        barlow_twins.Coauthor-CS:
+          total_epochs: 4000
+          warmup_epochs: 400
+          log_interval: 1000
+          emb_dim: 256
+          lr_base: 1e-05
+          p_x: 0.2
+          p_e: 0.5
+    outs:
+    - path: data/ssl/barlow_twins/Coauthor-CS/embeddings/
+      md5: ee3daca1425549cd9caca7addbe08181.dir
+      size: 1877375200
+      nfiles: 100
+    - path: data/ssl/barlow_twins/Coauthor-CS/logs/
+      md5: b60d3b4638bd2dddd4f852340b424f64.dir
+      size: 29181502
+      nfiles: 20
+    - path: data/ssl/barlow_twins/Coauthor-CS/metadata.json
+      md5: d0326aaa6727a383e8c7b583a7a2ea84
+      size: 10946
+    - path: data/ssl/barlow_twins/Coauthor-CS/metrics.json
+      md5: bb49b80c8563e8714dd52fcac0f60119
+      size: 882
+    - path: data/ssl/barlow_twins/Coauthor-CS/models/
+      md5: 2c8a76de1972c54fa90cbac0368990b6.dir
+      size: 868402060
+      nfiles: 20
+  train_transductive_barlow_twins@Coauthor-Physics:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py Coauthor-Physics
+      barlow_twins
+    deps:
+    - path: data/ssl/datasets/Coauthor-Physics/
+      md5: 3095b587964b691f75571c1088ab375d.dir
+      size: 1187693422
+      nfiles: 4
+    - path: experiments/scripts/train_transductive.py
+      md5: 8024ec5013caa94278861772c40c7038
+      size: 3599
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/train_transductive.yaml:
+        barlow_twins.Coauthor-Physics:
+          total_epochs: 4000
+          warmup_epochs: 400
+          log_interval: 1000
+          emb_dim: 128
+          lr_base: 1e-05
+          p_x: 0.2
+          p_e: 0.5
+    outs:
+    - path: data/ssl/barlow_twins/Coauthor-Physics/embeddings/
+      md5: 9b6df214f28b09f6d56eb3733071fb64.dir
+      size: 1766117600
+      nfiles: 100
+    - path: data/ssl/barlow_twins/Coauthor-Physics/logs/
+      md5: 086f18861216fde8d4d0821940b02938.dir
+      size: 33245363
+      nfiles: 20
+    - path: data/ssl/barlow_twins/Coauthor-Physics/metadata.json
+      md5: 9d7baf1a7ee6b3d38773daa61302f41c
+      size: 10901
+    - path: data/ssl/barlow_twins/Coauthor-Physics/metrics.json
+      md5: 97c0c92348330304638d5e3d8ef6c832
+      size: 882
+    - path: data/ssl/barlow_twins/Coauthor-Physics/models/
+      md5: ebcabea1b46100c579de76854fb3731c.dir
+      size: 525371020
+      nfiles: 20
+  hps_transductive_hsic@WikiCS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py
+      WikiCS hsic
+    deps:
+    - path: data/ssl/datasets/WikiCS/
+      md5: 7ef0d1cda1998b72b9ac4338ca7e3c72.dir
+      size: 102141146
+      nfiles: 4
+    - path: experiments/scripts/hyperparameter_search_transductive.py
+      md5: 581efdc3638f8eef7c8ef9214b8b4dd7
+      size: 2299
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/hyperparameter_search_transductive.yaml:
+        hsic.WikiCS:
+          total_epochs: 500
+          warmup_epochs: 50
+          mask_idx: 0
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 256
+          lr_base: 0.0005
+    outs:
+    - path: data/ssl/hsic/WikiCS/hps.csv
+      md5: c6741ce9227073daceb0938aaf41ceb8
+      size: 3608
+  hps_transductive_hsic@Amazon-Photo:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py
+      Amazon-Photo hsic
+    deps:
+    - path: data/ssl/datasets/Amazon-Photo/
+      md5: 5f52218ff80611104bb313bd310f4d0d.dir
+      size: 44246369
+      nfiles: 4
+    - path: experiments/scripts/hyperparameter_search_transductive.py
+      md5: 581efdc3638f8eef7c8ef9214b8b4dd7
+      size: 2299
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/hyperparameter_search_transductive.yaml:
+        hsic.Amazon-Photo:
+          total_epochs: 500
+          warmup_epochs: 50
+          mask_idx: 0
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 256
+          lr_base: 0.0001
+    outs:
+    - path: data/ssl/hsic/Amazon-Photo/hps.csv
+      md5: 744e14cd25936fe65a6cb0976c852ab6
+      size: 3589
+  hps_transductive_hsic@Amazon-CS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py
+      Amazon-CS hsic
+    deps:
+    - path: data/ssl/datasets/Amazon-CS/
+      md5: 7f0937cd73da9482ebce6a4f3f70ea5e.dir
+      size: 82919945
+      nfiles: 4
+    - path: experiments/scripts/hyperparameter_search_transductive.py
+      md5: 581efdc3638f8eef7c8ef9214b8b4dd7
+      size: 2299
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/hyperparameter_search_transductive.yaml:
+        hsic.Amazon-CS:
+          total_epochs: 500
+          warmup_epochs: 50
+          mask_idx: 0
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 128
+          lr_base: 0.0005
+    outs:
+    - path: data/ssl/hsic/Amazon-CS/hps.csv
+      md5: 53f93e1b6d53d4619206b87bb39888bc
+      size: 3502
+  hps_transductive_hsic@Coauthor-CS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py
+      Coauthor-CS hsic
+    deps:
+    - path: data/ssl/datasets/Coauthor-CS/
+      md5: de381c7fb631620ea4d2247c513d5754.dir
+      size: 515731875
+      nfiles: 4
+    - path: experiments/scripts/hyperparameter_search_transductive.py
+      md5: 581efdc3638f8eef7c8ef9214b8b4dd7
+      size: 2299
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/hyperparameter_search_transductive.yaml:
+        hsic.Coauthor-CS:
+          total_epochs: 500
+          warmup_epochs: 50
+          mask_idx: 0
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 256
+          lr_base: 1e-05
+    outs:
+    - path: data/ssl/hsic/Coauthor-CS/hps.csv
+      md5: 9d46597dcdc21b20cd350a8c987c11c7
+      size: 3621
+  train_transductive_hsic@WikiCS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py WikiCS hsic
+    deps:
+    - path: data/ssl/datasets/WikiCS/
+      md5: 7ef0d1cda1998b72b9ac4338ca7e3c72.dir
+      size: 102141146
+      nfiles: 4
+    - path: experiments/scripts/train_transductive.py
+      md5: 8024ec5013caa94278861772c40c7038
+      size: 3599
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/train_transductive.yaml:
+        hsic.WikiCS:
+          total_epochs: 4000
+          warmup_epochs: 400
+          log_interval: 1000
+          emb_dim: 256
+          lr_base: 0.0005
+          p_x: 0.1
+          p_e: 0.2
+    outs:
+    - path: data/ssl/hsic/WikiCS/embeddings/
+      md5: 1e98676a9487a85ca625ba1f3d1c9664.dir
+      size: 1198258400
+      nfiles: 100
+    - path: data/ssl/hsic/WikiCS/logs/
+      md5: 18b4aa6d81420f8d1c037b0c008a51cb.dir
+      size: 28420761
+      nfiles: 20
+    - path: data/ssl/hsic/WikiCS/metadata.json
+      md5: 3fc646121d244d1fdab05a11f30597e7
+      size: 10917
+    - path: data/ssl/hsic/WikiCS/metrics.json
+      md5: 8827a267548af58209d5971b043c0aee
+      size: 877
+    - path: data/ssl/hsic/WikiCS/models/
+      md5: 27a5743ebe2d35b5776cee2662c91ca9.dir
+      size: 69067660
+      nfiles: 20
+  hps_transductive_hsic@Coauthor-Physics:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py
+      Coauthor-Physics hsic
+    deps:
+    - path: data/ssl/datasets/Coauthor-Physics/
+      md5: 3095b587964b691f75571c1088ab375d.dir
+      size: 1187693422
+      nfiles: 4
+    - path: experiments/scripts/hyperparameter_search_transductive.py
+      md5: 581efdc3638f8eef7c8ef9214b8b4dd7
+      size: 2299
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/hyperparameter_search_transductive.yaml:
+        hsic.Coauthor-Physics:
+          total_epochs: 500
+          warmup_epochs: 50
+          mask_idx: 0
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 128
+          lr_base: 1e-05
+    outs:
+    - path: data/ssl/hsic/Coauthor-Physics/hps.csv
+      md5: dbdd2445df3a272f228484ceb790b56b
+      size: 3621
+  train_transductive_hsic@Amazon-CS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py Amazon-CS
+      hsic
+    deps:
+    - path: data/ssl/datasets/Amazon-CS/
+      md5: 7f0937cd73da9482ebce6a4f3f70ea5e.dir
+      size: 82919945
+      nfiles: 4
+    - path: experiments/scripts/train_transductive.py
+      md5: 8024ec5013caa94278861772c40c7038
+      size: 3599
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/train_transductive.yaml:
+        hsic.Amazon-CS:
+          total_epochs: 4000
+          warmup_epochs: 400
+          log_interval: 1000
+          emb_dim: 128
+          lr_base: 0.0005
+          p_x: 0.1
+          p_e: 0.4
+    outs:
+    - path: data/ssl/hsic/Amazon-CS/embeddings/
+      md5: 654f536ea3a67caf4b90207c4be9c07f.dir
+      size: 704178400
+      nfiles: 100
+    - path: data/ssl/hsic/Amazon-CS/logs/
+      md5: 6f206b240f7b06433dc663a5c041d55c.dir
+      size: 19253132
+      nfiles: 20
+    - path: data/ssl/hsic/Amazon-CS/metadata.json
+      md5: 2ca41bc747e8e8b20363f072a4fdd637
+      size: 10751
+    - path: data/ssl/hsic/Amazon-CS/metrics.json
+      md5: 1bbb09d0e8000b0df3fa74fee981704f
+      size: 880
+    - path: data/ssl/hsic/Amazon-CS/models/
+      md5: 11d1b1e1b973ecebeca2eb93f4849f55.dir
+      size: 55479180
+      nfiles: 20
+  train_transductive_hsic@Amazon-Photo:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py Amazon-Photo
+      hsic
+    deps:
+    - path: data/ssl/datasets/Amazon-Photo/
+      md5: 5f52218ff80611104bb313bd310f4d0d.dir
+      size: 44246369
+      nfiles: 4
+    - path: experiments/scripts/train_transductive.py
+      md5: 8024ec5013caa94278861772c40c7038
+      size: 3599
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/train_transductive.yaml:
+        hsic.Amazon-Photo:
+          total_epochs: 4000
+          warmup_epochs: 400
+          log_interval: 1000
+          emb_dim: 256
+          lr_base: 0.0001
+          p_x: 0.3
+          p_e: 0.4
+    outs:
+    - path: data/ssl/hsic/Amazon-Photo/embeddings/
+      md5: 358900e676a64d7160cf73c8e1098928.dir
+      size: 783436000
+      nfiles: 100
+    - path: data/ssl/hsic/Amazon-Photo/logs/
+      md5: 8e7d2f6d274975599ac72516ef71ea3d.dir
+      size: 21896439
+      nfiles: 20
+    - path: data/ssl/hsic/Amazon-Photo/metadata.json
+      md5: b8270bf8c4ca34efab3dd628389d06a8
+      size: 10957
+    - path: data/ssl/hsic/Amazon-Photo/metrics.json
+      md5: d6761a362390d65ade1532d6e2eb44bf
+      size: 878
+    - path: data/ssl/hsic/Amazon-Photo/models/
+      md5: aeac349d05afb861bdb70e7ca00faa9a.dir
+      size: 123749260
+      nfiles: 20
+  train_transductive_hsic@Coauthor-CS:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py Coauthor-CS
+      hsic
+    deps:
+    - path: data/ssl/datasets/Coauthor-CS/
+      md5: de381c7fb631620ea4d2247c513d5754.dir
+      size: 515731875
+      nfiles: 4
+    - path: experiments/scripts/train_transductive.py
+      md5: 8024ec5013caa94278861772c40c7038
+      size: 3599
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/train_transductive.yaml:
+        hsic.Coauthor-CS:
+          total_epochs: 4000
+          warmup_epochs: 400
+          log_interval: 1000
+          emb_dim: 256
+          lr_base: 1e-05
+          p_x: 0.1
+          p_e: 0.4
+    outs:
+    - path: data/ssl/hsic/Coauthor-CS/embeddings/
+      md5: 9ae508c57555ae621656d66ee60cc678.dir
+      size: 1877375200
+      nfiles: 100
+    - path: data/ssl/hsic/Coauthor-CS/logs/
+      md5: 8d4cd46cb68986ba05c0728907063690.dir
+      size: 28218092
+      nfiles: 20
+    - path: data/ssl/hsic/Coauthor-CS/metadata.json
+      md5: 57ebd92fcbf10beb25b7ca227d92402e
+      size: 10927
+    - path: data/ssl/hsic/Coauthor-CS/metrics.json
+      md5: 6ac913b65962dd249ca769be829c94ba
+      size: 882
+    - path: data/ssl/hsic/Coauthor-CS/models/
+      md5: 701cf31f78a0500215d3b597544bcd96.dir
+      size: 868402060
+      nfiles: 20
+  train_transductive_hsic@Coauthor-Physics:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py Coauthor-Physics
+      hsic
+    deps:
+    - path: data/ssl/datasets/Coauthor-Physics/
+      md5: 3095b587964b691f75571c1088ab375d.dir
+      size: 1187693422
+      nfiles: 4
+    - path: experiments/scripts/train_transductive.py
+      md5: 8024ec5013caa94278861772c40c7038
+      size: 3599
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/train_transductive.yaml:
+        hsic.Coauthor-Physics:
+          total_epochs: 4000
+          warmup_epochs: 400
+          log_interval: 1000
+          emb_dim: 128
+          lr_base: 1e-05
+          p_x: 0.2
+          p_e: 0.5
+    outs:
+    - path: data/ssl/hsic/Coauthor-Physics/embeddings/
+      md5: 9431208f37c669ee8d0a6a8ab4ec02ae.dir
+      size: 1766117600
+      nfiles: 100
+    - path: data/ssl/hsic/Coauthor-Physics/logs/
+      md5: 80ec284c61bcb90fa249dee1cfd1f36f.dir
+      size: 33433573
+      nfiles: 20
+    - path: data/ssl/hsic/Coauthor-Physics/metadata.json
+      md5: c73e7ce634059fbf168bb99302400ba5
+      size: 10929
+    - path: data/ssl/hsic/Coauthor-Physics/metrics.json
+      md5: d2ca202be84e4d4c95d2916d3e12fc5f
+      size: 880
+    - path: data/ssl/hsic/Coauthor-Physics/models/
+      md5: e9ba76d77e45bb5ee6262b6021acbcf0.dir
+      size: 525372300
+      nfiles: 20
+  preprocess_dataset@ogbn-arxiv:
+    cmd: PYTHONPATH=. python3 experiments/scripts/preprocess_dataset.py ogbn-arxiv
+    deps:
+    - path: experiments/scripts/preprocess_dataset.py
+      md5: 0f948fa33378aff5ee196cc468b320b8
+      size: 364
+    outs:
+    - path: data/ssl/datasets/ogbn-arxiv/
+      md5: a80de10eee83c6819a9bb073c33aa08e.dir
+      size: 191277877
+      nfiles: 16
+  train_transductive_barlow_twins@ogbn-arxiv:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py ogbn-arxiv
+      barlow_twins
+    deps:
+    - path: data/ssl/datasets/ogbn-arxiv/
+      md5: a80de10eee83c6819a9bb073c33aa08e.dir
+      size: 191277877
+      nfiles: 16
+    - path: experiments/scripts/train_transductive.py
+      md5: 8024ec5013caa94278861772c40c7038
+      size: 3599
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/train_transductive.yaml:
+        barlow_twins.ogbn-arxiv:
+          total_epochs: 700
+          warmup_epochs: 100
+          log_interval: 100
+          emb_dim: 256
+          lr_base: 0.001
+          p_x: 0.0
+          p_e: 0.4
+    outs:
+    - path: data/ssl/barlow_twins/ogbn-arxiv/embeddings/
+      md5: bcb79e5e5c679988ea7b6d0952b47b6d.dir
+      size: 27745278720
+      nfiles: 160
+    - path: data/ssl/barlow_twins/ogbn-arxiv/logs/
+      md5: f16a777e8ebb282161c4cd12026b534f.dir
+      size: 59152127
+      nfiles: 20
+    - path: data/ssl/barlow_twins/ogbn-arxiv/metadata.json
+      md5: 245e86f41f518736a835dcd2be307f96
+      size: 16707
+    - path: data/ssl/barlow_twins/ogbn-arxiv/metrics.json
+      md5: 010034d1be47c4c4c6c09ae3e12bc833
+      size: 1394
+    - path: data/ssl/barlow_twins/ogbn-arxiv/models/
+      md5: 0564119dce1e0b9cf5121bb68f540d2c.dir
+      size: 40200500
+      nfiles: 20
+  hps_transductive_barlow_twins@ogbn-arxiv:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py
+      ogbn-arxiv barlow_twins
+    deps:
+    - path: data/ssl/datasets/ogbn-arxiv/
+      md5: a80de10eee83c6819a9bb073c33aa08e.dir
+      size: 191277877
+      nfiles: 16
+    - path: experiments/scripts/hyperparameter_search_transductive.py
+      md5: 581efdc3638f8eef7c8ef9214b8b4dd7
+      size: 2299
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/hyperparameter_search_transductive.yaml:
+        barlow_twins.ogbn-arxiv:
+          total_epochs: 500
+          warmup_epochs: 50
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 256
+          lr_base: 0.01
+    outs:
+    - path: data/ssl/barlow_twins/ogbn-arxiv/hps.csv
+      md5: 179e5a223906152633585a191d12c4a9
+      size: 3618
+  hps_transductive_hsic@ogbn-arxiv:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_transductive.py
+      ogbn-arxiv hsic
+    deps:
+    - path: data/ssl/datasets/ogbn-arxiv/
+      md5: a80de10eee83c6819a9bb073c33aa08e.dir
+      size: 191277877
+      nfiles: 16
+    - path: experiments/scripts/hyperparameter_search_transductive.py
+      md5: 581efdc3638f8eef7c8ef9214b8b4dd7
+      size: 2299
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/hyperparameter_search_transductive.yaml:
+        hsic.ogbn-arxiv:
+          total_epochs: 500
+          warmup_epochs: 50
+          mask_idx: 0
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 256
+          lr_base: 0.01
+    outs:
+    - path: data/ssl/hsic/ogbn-arxiv/hps.csv
+      md5: 67fa89181760f08cf0ffe696c1d5d64f
+      size: 3623
+  train_transductive_hsic@ogbn-arxiv:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_transductive.py ogbn-arxiv
+      hsic
+    deps:
+    - path: data/ssl/datasets/ogbn-arxiv/
+      md5: a80de10eee83c6819a9bb073c33aa08e.dir
+      size: 191277877
+      nfiles: 16
+    - path: experiments/scripts/train_transductive.py
+      md5: 8024ec5013caa94278861772c40c7038
+      size: 3599
+    - path: gssl/transductive_model.py
+      md5: cc3aaf8ed973a13a3803e229328d693d
+      size: 6310
+    params:
+      experiments/configs/train_transductive.yaml:
+        hsic.ogbn-arxiv:
+          total_epochs: 700
+          warmup_epochs: 100
+          log_interval: 100
+          emb_dim: 256
+          lr_base: 0.001
+          p_x: 0.0
+          p_e: 0.3
+    outs:
+    - path: data/ssl/hsic/ogbn-arxiv/embeddings/
+      md5: d6bbc6230ffb190b6dd6dc81b29acef2.dir
+      size: 27745278720
+      nfiles: 160
+    - path: data/ssl/hsic/ogbn-arxiv/logs/
+      md5: 75e0682e91c33724bd259835bea6fb0f.dir
+      size: 61060273
+      nfiles: 20
+    - path: data/ssl/hsic/ogbn-arxiv/metadata.json
+      md5: 79ba167d9aac3b014f9d92c7996c7ea9
+      size: 16704
+    - path: data/ssl/hsic/ogbn-arxiv/metrics.json
+      md5: 9cd9da217a6e8a68ec614a24095790fe
+      size: 1389
+    - path: data/ssl/hsic/ogbn-arxiv/models/
+      md5: be8b2efa195d278190ac162eb84ba9e9.dir
+      size: 40200500
+      nfiles: 20
+  preprocess_dataset@PPI:
+    cmd: PYTHONPATH=. python3 experiments/scripts/preprocess_dataset.py PPI
+    deps:
+    - path: experiments/scripts/preprocess_dataset.py
+      md5: 0f948fa33378aff5ee196cc468b320b8
+      size: 364
+    outs:
+    - path: data/ssl/datasets/PPI/
+      md5: 218e6533b4e33d1b912caf915e7efbac.dir
+      size: 201304017
+      nfiles: 17
+  hps_inductive_barlow_twins:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_inductive_ppi.py
+      barlow_twins
+    deps:
+    - path: data/ssl/datasets/PPI/
+      md5: 218e6533b4e33d1b912caf915e7efbac.dir
+      size: 201304017
+      nfiles: 17
+    - path: experiments/scripts/hyperparameter_search_inductive_ppi.py
+      md5: 3931b98efc6aded5c4bd171ec2a5ce71
+      size: 2462
+    - path: gssl/inductive/model.py
+      md5: b3d13a42f423810d2d0394af19b9ecb1
+      size: 5741
+    params:
+      experiments/configs/hyperparameter_search_inductive_ppi.yaml:
+        barlow_twins.PPI:
+          total_epochs: 500
+          warmup_epochs: 50
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 512
+          lr_base: 0.005
+    outs:
+    - path: data/ssl/barlow_twins/PPI/hps.csv
+      md5: 82742924f445d40cb07c8e28ad650b5f
+      size: 3650
+  train_inductive_ppi_barlow_twins:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_inductive_ppi.py barlow_twins
+    deps:
+    - path: data/ssl/datasets/PPI/
+      md5: 218e6533b4e33d1b912caf915e7efbac.dir
+      size: 201304017
+      nfiles: 17
+    - path: experiments/scripts/train_inductive_ppi.py
+      md5: 557b272b48e70bb60fce1853c746cf48
+      size: 3202
+    - path: gssl/inductive/model.py
+      md5: b3d13a42f423810d2d0394af19b9ecb1
+      size: 5741
+    params:
+      experiments/configs/train_inductive_ppi.yaml:
+        barlow_twins.PPI:
+          total_epochs: 500
+          warmup_epochs: 50
+          log_interval: 100
+          emb_dim: 512
+          lr_base: 0.005
+          p_x: 0.1
+          p_e: 0.1
+    outs:
+    - path: data/ssl/barlow_twins/PPI/embeddings/
+      md5: a45956674d263ca9923509a270d9a8f2.dir
+      size: 13994719920
+      nfiles: 120
+    - path: data/ssl/barlow_twins/PPI/logs/
+      md5: 7f00988d02332e1ed9c5f3efce0aa205.dir
+      size: 461560
+      nfiles: 20
+    - path: data/ssl/barlow_twins/PPI/metadata.json
+      md5: be6bbadc22a763f5a994df8afca68a8d
+      size: 12856
+    - path: data/ssl/barlow_twins/PPI/metrics.json
+      md5: 5231d2a0bc071fdf18999dc7bf118bd4
+      size: 1018
+    - path: data/ssl/barlow_twins/PPI/models/
+      md5: 8f23aeef04bc8e80b941285e95bad54e.dir
+      size: 1412842660
+      nfiles: 20
+  hps_inductive_hsic:
+    cmd: PYTHONPATH=. python3 experiments/scripts/hyperparameter_search_inductive_ppi.py
+      hsic
+    deps:
+    - path: data/ssl/datasets/PPI/
+      md5: 218e6533b4e33d1b912caf915e7efbac.dir
+      size: 201304017
+      nfiles: 17
+    - path: experiments/scripts/hyperparameter_search_inductive_ppi.py
+      md5: 3931b98efc6aded5c4bd171ec2a5ce71
+      size: 2462
+    - path: gssl/inductive/model.py
+      md5: b3d13a42f423810d2d0394af19b9ecb1
+      size: 5741
+    params:
+      experiments/configs/hyperparameter_search_inductive_ppi.yaml:
+        hsic.PPI:
+          total_epochs: 500
+          warmup_epochs: 50
+          p_x:
+            min: 0
+            max: 0.5
+            step: 0.1
+          p_e:
+            min: 0
+            max: 0.5
+            step: 0.1
+          emb_dim: 512
+          lr_base: 0.005
+    outs:
+    - path: data/ssl/hsic/PPI/hps.csv
+      md5: 582b72ab33909d2b4089b8dd063f7676
+      size: 3606
+  train_inductive_ppi_hsic:
+    cmd: PYTHONPATH=. python3 experiments/scripts/train_inductive_ppi.py hsic
+    deps:
+    - path: data/ssl/datasets/PPI/
+      md5: 218e6533b4e33d1b912caf915e7efbac.dir
+      size: 201304017
+      nfiles: 17
+    - path: experiments/scripts/train_inductive_ppi.py
+      md5: 557b272b48e70bb60fce1853c746cf48
+      size: 3202
+    - path: gssl/inductive/model.py
+      md5: b3d13a42f423810d2d0394af19b9ecb1
+      size: 5741
+    params:
+      experiments/configs/train_inductive_ppi.yaml:
+        hsic.PPI:
+          total_epochs: 500
+          warmup_epochs: 50
+          log_interval: 100
+          emb_dim: 512
+          lr_base: 0.005
+          p_x: 0.1
+          p_e: 0.1
+    outs:
+    - path: data/ssl/hsic/PPI/embeddings/
+      md5: 8c7a7bc2ea86376b92814daf4aafbda9.dir
+      size: 13994719920
+      nfiles: 120
+    - path: data/ssl/hsic/PPI/logs/
+      md5: 51dfece1d3d6eab57eb4c2cab1a5572f.dir
+      size: 461560
+      nfiles: 20
+    - path: data/ssl/hsic/PPI/metadata.json
+      md5: 9c80fa7113c96b5ae23b7fe3d6a39412
+      size: 12850
+    - path: data/ssl/hsic/PPI/metrics.json
+      md5: fe5152826a06a8c032d16e5b14b3de98
+      size: 1021
+    - path: data/ssl/hsic/PPI/models/
+      md5: 14ecc28350ce51631ea9db59aea5100d.dir
+      size: 1412842660
+      nfiles: 20

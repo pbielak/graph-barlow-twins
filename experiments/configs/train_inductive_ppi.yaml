@@ -1,0 +1,25 @@
+barlow_twins:
+  default: &default_bt
+    total_epochs: 500
+    warmup_epochs: 50
+    log_interval: 100
+
+  PPI:
+    <<: *default_bt
+    emb_dim: 512
+    lr_base: 5.e-3
+    p_x: 0.1
+    p_e: 0.1
+
+hsic:
+  default: &default_hsic
+    total_epochs: 500
+    warmup_epochs: 50
+    log_interval: 100
+
+  PPI:
+    <<: *default_hsic
+    emb_dim: 512
+    lr_base: 5.e-3
+    p_x: 0.1
+    p_e: 0.1

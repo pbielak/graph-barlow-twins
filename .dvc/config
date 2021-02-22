@@ -1,0 +1,6 @@
+[core]
+    remote = minio
+[feature]
+    parametrization = true
+['remote "minio"']
+    url = http://156.17.248.227:30981/public/graph-barlow-twins/
