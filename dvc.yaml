@@ -224,3 +224,12 @@ stages:
     - data/lambda_ablation_results.csv
     outs:
     - data/lambda_ablation_plot.png
+
+  run_projector_ablation:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/run_projector_ablation.py
+    deps:
+    - experiments/scripts/run_projector_ablation.py
+    outs:
+    - data/projector_ablation_results.csv
+

@@ -1237,3 +1237,13 @@ stages:
     - path: data/lambda_ablation_plot.png
       md5: a3c37e67f7b7959029999f5717afab49
       size: 47435
+  run_projector_ablation:
+    cmd: PYTHONPATH=. python3 experiments/scripts/run_projector_ablation.py
+    deps:
+    - path: experiments/scripts/run_projector_ablation.py
+      md5: cd940c2757d4814a9215c05225a4c442
+      size: 8149
+    outs:
+    - path: data/projector_ablation_results.csv
+      md5: 55e91fbede2cdcc00402bce7adbd2f78
+      size: 412
