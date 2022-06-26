@@ -207,3 +207,11 @@ stages:
     outs:
       - data/products/deepwalk.json
       - data/products/deepwalk_features.json
+
+  run_lambda_ablation:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/run_lambda_ablation.py
+    deps:
+    - experiments/scripts/run_lambda_ablation.py
+    outs:
+    - data/lambda_ablation_results.csv

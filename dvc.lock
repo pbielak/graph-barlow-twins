@@ -1214,3 +1214,13 @@ stages:
     - path: data/products/deepwalk_features.json
       md5: e56c14d833d07664d21a5366dae23050
       size: 476
+  run_lambda_ablation:
+    cmd: PYTHONPATH=. python3 experiments/scripts/run_lambda_ablation.py
+    deps:
+    - path: experiments/scripts/run_lambda_ablation.py
+      md5: 2ecf186d24fd236b0b65ecc436991b30
+      size: 8285
+    outs:
+    - path: data/lambda_ablation_results.csv
+      md5: 298cc18dacd66feb47a3c7f9c67d3947
+      size: 374
