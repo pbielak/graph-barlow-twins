@@ -1224,3 +1224,16 @@ stages:
     - path: data/lambda_ablation_results.csv
       md5: 298cc18dacd66feb47a3c7f9c67d3947
       size: 374
+  make_lambda_ablation_plot:
+    cmd: PYTHONPATH=. python3 experiments/scripts/make_lambda_ablation_plot.py
+    deps:
+    - path: data/lambda_ablation_results.csv
+      md5: 298cc18dacd66feb47a3c7f9c67d3947
+      size: 374
+    - path: experiments/scripts/make_lambda_ablation_plot.py
+      md5: fbef0212cb0ca4c3df961a8e7a5b603d
+      size: 1366
+    outs:
+    - path: data/lambda_ablation_plot.png
+      md5: a3c37e67f7b7959029999f5717afab49
+      size: 47435

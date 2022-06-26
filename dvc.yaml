@@ -215,3 +215,12 @@ stages:
     - experiments/scripts/run_lambda_ablation.py
     outs:
     - data/lambda_ablation_results.csv
+
+  make_lambda_ablation_plot:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/make_lambda_ablation_plot.py
+    deps:
+    - experiments/scripts/make_lambda_ablation_plot.py
+    - data/lambda_ablation_results.csv
+    outs:
+    - data/lambda_ablation_plot.png
