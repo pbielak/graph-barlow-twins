@@ -1,4 +1,5 @@
 from copy import deepcopy
+from time import perf_counter
 from typing import Dict, Optional
 
 import numpy as np
@@ -189,6 +190,7 @@ def evaluate_single_graph_full_batch_model(
     data, masks = load_dataset(name=dataset_name)
 
     test_accuracies = []
+    times = []
 
     for i in tqdm(range(5), desc="Splits"):
         augmentor = GraphAugmentor(
@@ -211,7 +213,9 @@ def evaluate_single_graph_full_batch_model(
             projector_dim=params["projector_dim"],
         )
 
+        st = perf_counter()
         model.fit(data=data)
+        end = perf_counter()
 
         z = model.predict(data=data)
         accuracy = evaluate_node_classification_acc(
@@ -220,10 +224,13 @@ def evaluate_single_graph_full_batch_model(
         )
 
         test_accuracies.append(accuracy["test"])
+        times.append(end - st)
 
     statistics = {
-        "mean": np.mean(test_accuracies),
-        "std": np.std(test_accuracies, ddof=1),
+        "acc_mean": np.mean(test_accuracies),
+        "acc_std": np.std(test_accuracies, ddof=1),
+        "time_mean": np.mean(times),
+        "time_std": np.std(times, ddof=1),
     }
     return statistics
 
