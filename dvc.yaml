@@ -231,5 +231,14 @@ stages:
     deps:
     - experiments/scripts/run_projector_ablation.py
     outs:
-    - data/projector_ablation_results.csv
+    - data/projector_ablation_results.pkl
 
+  make_projector_ablation_plot:
+    wdir: .
+    cmd: PYTHONPATH=. python3 experiments/scripts/make_projector_ablation_plot.py
+    deps:
+    - experiments/scripts/make_projector_ablation_plot.py
+    - data/projector_ablation_results.csv
+    outs:
+    - data/projector_ablation_plot_size_vs_acc.png
+    - data/projector_ablation_plot_time_vs_acc.png

@@ -30,7 +30,7 @@ def main():
         x=0.28,
         y=0.48,
         s="$\lambda = \\frac{1}{d}$",
-        fontsize=14,
+        fontsize=16,
         transform=ax.transAxes,
         rotation="vertical",
         color="r",

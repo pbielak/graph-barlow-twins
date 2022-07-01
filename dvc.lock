@@ -1231,12 +1231,12 @@ stages:
       md5: 298cc18dacd66feb47a3c7f9c67d3947
       size: 374
     - path: experiments/scripts/make_lambda_ablation_plot.py
-      md5: fbef0212cb0ca4c3df961a8e7a5b603d
+      md5: 569da85578a0bdc5223b099dc8bc4182
       size: 1366
     outs:
     - path: data/lambda_ablation_plot.png
-      md5: a3c37e67f7b7959029999f5717afab49
-      size: 47435
+      md5: 11610bec558a6738caa6b9f9ec6126de
+      size: 47510
   run_projector_ablation:
     cmd: PYTHONPATH=. python3 experiments/scripts/run_projector_ablation.py
     deps:
@@ -1247,3 +1247,19 @@ stages:
     - path: data/projector_ablation_results.csv
       md5: f3fb0ffe30309bb899e3e6314c8d8092
       size: 780
+  make_projector_ablation_plot:
+    cmd: PYTHONPATH=. python3 experiments/scripts/make_projector_ablation_plot.py
+    deps:
+    - path: data/projector_ablation_results.csv
+      md5: f3fb0ffe30309bb899e3e6314c8d8092
+      size: 780
+    - path: experiments/scripts/make_projector_ablation_plot.py
+      md5: 5e55e6891412a76d1f761005cb3820d5
+      size: 2634
+    outs:
+    - path: data/projector_ablation_plot_size_vs_acc.png
+      md5: f89c6fd66fe982af63f438b7fd71c260
+      size: 46701
+    - path: data/projector_ablation_plot_time_vs_acc.png
+      md5: 8c9d8b494f2e4f7923c7277a32db1eba
+      size: 31241

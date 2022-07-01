@@ -231,6 +231,7 @@ def evaluate_single_graph_full_batch_model(
         "acc_std": np.std(test_accuracies, ddof=1),
         "time_mean": np.mean(times),
         "time_std": np.std(times, ddof=1),
+        "all": times,
     }
     return statistics
 
@@ -279,10 +280,7 @@ def main():
         (
             pd.DataFrame
             .from_records(records)
-            .to_csv(
-                path_or_buf="data/projector_ablation_results.csv",
-                index=False,
-            )
+            .to_pickle(path="data/projector_ablation_results.pkl")
         )
 
 
