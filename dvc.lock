@@ -1241,12 +1241,12 @@ stages:
     cmd: PYTHONPATH=. python3 experiments/scripts/run_projector_ablation.py
     deps:
     - path: experiments/scripts/run_projector_ablation.py
-      md5: 6ad44abbea8e787dc958634354f45244
+      md5: 4d330f68d4de9467dbc4d85408f83114
       size: 8370
     outs:
-    - path: data/projector_ablation_results.csv
-      md5: f3fb0ffe30309bb899e3e6314c8d8092
-      size: 780
+    - path: data/projector_ablation_results.pkl
+      md5: ce1a58c190e01d5aa0b6e9880b7bec8d
+      size: 2285
   make_projector_ablation_plot:
     cmd: PYTHONPATH=. python3 experiments/scripts/make_projector_ablation_plot.py
     deps:

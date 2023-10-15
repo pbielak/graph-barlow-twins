@@ -231,7 +231,8 @@ def evaluate_single_graph_full_batch_model(
         "acc_std": np.std(test_accuracies, ddof=1),
         "time_mean": np.mean(times),
         "time_std": np.std(times, ddof=1),
-        "all": times,
+        "all_acc": test_accuracies,
+        "all_times": times,
     }
     return statistics
 
